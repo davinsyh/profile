@@ -1,0 +1,21 @@
+body {
+    background-color: #9eccf4;
+    font-family: sans-serif;
+    line-height: 1.6;
+    margin: 20px;
+}
+
+h1 {
+    color: #004080;
+}
+
+p {
+    margin-top: 15px;
+    margin-bottom: 15px;
+}
+
+img {
+    max-width: 400px;
+    height: auto;
+    border-radius: 8px;
+}
