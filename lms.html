@@ -1,0 +1,132 @@
+<!-- File: formulir_validasi.html -->
+<!doctype html>
+<html lang="id">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Formulir Validasi</title>
+  <style>
+    body{font-family:system-ui,-apple-system,Segoe UI,Roboto,'Helvetica Neue',Arial;margin:32px;background:#f7f8fa}
+    .card{background:#fff;padding:20px;border-radius:12px;max-width:480px;margin:0 auto;box-shadow:0 6px 18px rgba(16,24,40,0.06)}
+    h1{font-size:20px;margin:0 0 12px}
+    label{display:block;margin-top:12px;font-weight:600}
+    input[type="text"],input[type="email"],input[type="password"]{width:100%;padding:10px;border-radius:8px;border:1px solid #d1d5db;font-size:14px}
+    .error{color:#b91c1c;font-size:13px;margin-top:6px}
+    .success{color:#065f46;font-size:14px;margin-top:12px}
+    button{margin-top:16px;padding:10px 14px;border-radius:8px;border:0;background:#2563eb;color:#fff;font-weight:600;cursor:pointer}
+    .field{margin-bottom:4px}
+  </style>
+</head>
+<body>
+  <main class="card">
+    <h1>Formulir Registrasi</h1>
+    <form id="form">
+      <div class="field">
+        <label for="name">Nama</label>
+        <input id="name" name="name" type="text" autocomplete="name" />
+        <div class="error" id="err-name" aria-live="polite"></div>
+      </div>
+
+      <div class="field">
+        <label for="email">Email</label>
+        <input id="email" name="email" type="email" autocomplete="email" />
+        <div class="error" id="err-email" aria-live="polite"></div>
+      </div>
+
+      <div class="field">
+        <label for="password">Password</label>
+        <input id="password" name="password" type="password" autocomplete="new-password" />
+        <div class="error" id="err-password" aria-live="polite"></div>
+      </div>
+
+      <button type="submit">Kirim</button>
+      <div id="result" role="status" aria-live="polite"></div>
+    </form>
+  </main>
+
+  <script>
+    const form = document.getElementById('form');
+    const nameInput = document.getElementById('name');
+    const emailInput = document.getElementById('email');
+    const passwordInput = document.getElementById('password');
+
+    const errName = document.getElementById('err-name');
+    const errEmail = document.getElementById('err-email');
+    const errPassword = document.getElementById('err-password');
+    const resultDiv = document.getElementById('result');
+
+    // Simple, commonly used RFC-like email check (good for client-side quick validation)
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+    function clearErrors(){
+      errName.textContent = '';
+      errEmail.textContent = '';
+      errPassword.textContent = '';
+      resultDiv.textContent = '';
+      resultDiv.className = '';
+    }
+
+    form.addEventListener('submit', function (e) {
+      e.preventDefault();
+      clearErrors();
+
+      let valid = true;
+
+      // Cek nama
+      if (!nameInput.value.trim()){
+        errName.textContent = 'Nama harus diisi.';
+        valid = false;
+      }
+
+      // Cek email
+      if (!emailInput.value.trim()){
+        errEmail.textContent = 'Email harus diisi.';
+        valid = false;
+      } else if (!emailRegex.test(emailInput.value.trim())){
+        errEmail.textContent = 'Format email tidak valid. Contoh: nama@domain.com';
+        valid = false;
+      }
+
+      // Cek password
+      if (!passwordInput.value){
+        errPassword.textContent = 'Password harus diisi.';
+        valid = false;
+      } else if (passwordInput.value.length < 8){
+        errPassword.textContent = 'Password minimal 8 karakter.';
+        valid = false;
+      }
+
+      if (!valid) return;
+
+      // Jika semua valid
+      resultDiv.textContent = 'Formulir berhasil divalidasi. Data siap dikirim.';
+      resultDiv.className = 'success';
+
+      // Di lingkungan nyata: kirim data ke server di sini menggunakan fetch/ajax.
+      // Contoh (komentari agar file tetap statis):
+      // fetch('/submit', {method:'POST', body: new FormData(form)})
+      //   .then(res => ... )
+
+      // Untuk demo, kita reset form setelah 1,5 detik
+      setTimeout(() => form.reset(), 1500);
+    });
+
+    // Validasi realtime kecil untuk pengalaman pengguna
+    emailInput.addEventListener('input', () => {
+      if (emailInput.value && !emailRegex.test(emailInput.value)){
+        errEmail.textContent = 'Format email tidak valid.';
+      } else {
+        errEmail.textContent = '';
+      }
+    });
+
+    passwordInput.addEventListener('input', () => {
+      if (passwordInput.value && passwordInput.value.length < 8){
+        errPassword.textContent = 'Password minimal 8 karakter.';
+      } else {
+        errPassword.textContent = '';
+      }
+    });
+  </script>
+</body>
+</html>
